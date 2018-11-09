@@ -1,0 +1,60 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>KO JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+</head>
+<body>
+    <div>
+        <p>Enter name: <input type="text" data-bind="value: name"></p>
+        <p> Hello <strong data-bind="text: name"></strong></p>
+    </div>
+
+    <div>
+        <ul data-bind="foreach: featuresList">
+            <li ><span data-bind="text: title"></span>----<span data-bind="text: desc"></span></li>
+        </ul>
+        <p>
+            Enter new Title:<input type="text" data-bind="value: newTitle">
+            Enter new Description:<input type="text" data-bind="value: newDesc">
+        </p>
+        <button data-bind="click: addNewFeature">Add New Feature</button>
+        <strong style="color: red">Feature already exists</strong>
+    </div>
+
+    <script type="text/javascript">
+        function appViewModel() {
+            this.name = ko.observable();
+            this.featuresList = ko.observableArray([
+                {title: "F1", desc: "Desc1"},
+                {title: "F2", desc: "Desc2"}
+            ]);
+            this.newTitle = ko.observable()
+            this.newDesc = ko.observable()
+            this.isExist = 0
+            this.addNewFeature = function() {
+                for(var i = 0; i < this.featuresList().length; i++) {
+                    if (this.newTitle() == this.featuresList()[i].title) {
+                        this.isExist = 1;
+                        break;
+                    }
+                }
+                if (this.isExist == 0) {
+                    this.featuresList.push({
+                        title: this.newTitle(),
+                        desc: this.newDesc()
+                    })
+                }
+                this.isExist = 0;
+            }
+        }
+
+        ko.applyBindings(new appViewModel())
+    </script>
+</body>
+</html>

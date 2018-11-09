@@ -1,0 +1,89 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>KnockoutJS basics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script src="application.js"></script>
+</head>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        function viewModel() {
+
+            // Text Bindings
+            this.fname = ko.observable('');
+            this.lname = ko.observable('');
+
+            // Computed binding
+            this.fullname = ko.computed(function() {
+                var full_name = this.fname() + " " + this.lname();
+                return full_name
+            }, this);
+
+            // Static Array binding
+            this.fav_foods = ko.observableArray(['Rice', 'Salad', 'Roti']);
+            this.newFood = ko.observable('');
+            this.addFood = function() {
+                this.fav_foods.push(this.newFood());
+            };
+
+            // Key-value pair bindings
+            this.newList = ko.observableArray([
+                {title: 'F1'},
+                {title: 'F2'},
+                {title: 'F3'}
+            ]);
+            this.display_error = ko.observable('0');
+            this.newTitle = ko.observable();
+            this.newDesc = ko.observable();
+            this.addNewFeature = function() {
+                console.log(this.newTitle())
+                console.log(this.newList())
+                if (this.newTitle() == this.newList().title) {
+                    console.log("Key exists")
+                }
+                else {
+                    console.log("Key doesn't exist")
+                }
+                this.newList.push({
+                    title: this.newTitle,
+                    // desc: this.newDesc
+                })
+            };
+        };
+        ko.applyBindings(new viewModel());
+    });
+</script>
+<body>
+    <div>
+        <p>Enter your First name: <input type="text" data-bind="value: fname"><p>
+        <p>Enter your Last name: <input type="text" data-bind="value: lname"><p>
+        <p> Hi <strong data-bind="text: fullname"></strong> Good Morning!</p>
+    </div>
+
+    <div>
+        <ul data-bind="foreach: fav_foods">
+            <li data-bind="text: $data"></li>
+        </ul>
+        <p>Add new food: <input type="text" data-bind="value: newFood"></p>
+        <button data-bind="click: $root.addFood">Add new Food</button>
+    </div>
+    <div>
+        <ul data-bind="foreach: newList">
+            <li>
+                <span data-bind="text: title"></span>====
+                <!-- <span data-bind="text: desc"></span> -->
+            </li>
+        </ul>
+        <p>Add new feature title: <input type="text" data-bind="value: newTitle"></p>
+        <!-- <p>Add new feature desc: <input type="text" data-bind="value: newDesc"></p> -->
+        <button data-bind="click: addNewFeature">Add new Feature</button>
+        <span data-bind="style: {display: display_error() == '0' ? 'none' : 'inline-block' }">Feature already exists</span>
+    </div>
+
+</body>
+</html>
